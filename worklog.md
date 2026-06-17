@@ -1,39 +1,56 @@
-# Ismisa Wellington - Worklog
+# ISMISA Rooftop - Worklog
 
 ---
 Task ID: 1
 Agent: Main Agent
-Task: Build complete Ismisa Wellington terraza bar website
+Task: Build complete ISMISA terraza bar website
 
 Work Log:
 - Analyzed project requirements: dark elegant bar theme, gold/amber accents, Spanish language
 - Generated 6 AI images: hero, billar, tragos, musica, terraza, about
 - Generated PWA icon (512x512)
 - Created custom dark/gold theme in globals.css with oklch colors
-- Built complete single-page site with all sections:
-  - Navbar (desktop + mobile with hamburger menu)
-  - Hero section with CTA buttons
-  - Gallery section (billar, tragos, musica, terraza)
-  - Live Music / Events section
-  - Menu / Tragos section (6 cocktails)
-  - About Us section
-  - Location + Hours section with Google Maps embed
-  - Footer with "Hecho por Jimbra" → jimbra.net
-  - Floating WhatsApp button (always visible, green, bottom-right)
-- Set up PWA: manifest.json, service worker (sw.js), icons at all sizes
-- Added comprehensive SEO metadata (title, description, keywords, Open Graph, Twitter cards)
-- Installed Playfair Display + Inter fonts
-- Added service worker registration component
-- Verified with Agent Browser: all sections render, mobile responsive, no errors
-- WhatsApp button: fixed position, z-index 50, always visible
-- Footer: properly sticks to bottom with "Hecho por Jimbra" link to jimbra.net
-- Mobile menu works with AnimatePresence animation
+- Built complete single-page site with all sections
+- Set up PWA: manifest.json, service worker, icons
+- Added comprehensive SEO metadata
+- Verified with Agent Browser
+
+---
+Task ID: 2
+Agent: Main Agent
+Task: Update site from "Ismisa Wellington" to "ISMISA" with real data from uploaded screenshots
+
+Work Log:
+- Used VLM to analyze 5 uploaded screenshots from WhatsApp Business and Contacts app
+- Extracted real business information:
+  - Name: ISMISA (not "Ismisa Wellington" - Wellington is the owner's name)
+  - Type: ROOFTOP bar (not "terraza")
+  - WhatsApp: +593 99 422 6390
+  - Email: wellfamite@gmail.com
+  - Address: Av. 72 N-O, Guayaquil, Ecuador
+  - Facebook: Ismisa Tour
+- Analyzed logo from screenshots: circular gold design with "ROOFTOP" arc, "ISMISA" cursive, laurel wreath, beer mugs
+- Generated ISMISA logo using AI image generation (1024x1024)
+- Updated all site references from "Ismisa Wellington" to "ISMISA"
+- Changed "Terraza" to "Rooftop" throughout the site
+- Updated WhatsApp number to real: 593994226390
+- Added email section in Location area
+- Added email icon/button in About and Footer sections
+- Updated address to real: Av. 72 N-O, Guayaquil, Ecuador
+- Updated logo in navbar (circular ISMISA logo image)
+- Added logo in hero section (large centered logo)
+- Updated footer with ISMISA logo image
+- Updated all SEO metadata (title, description, keywords, OG, Twitter)
+- Updated PWA manifest with "ISMISA" name
+- Replaced all PWA icons with ISMISA logo
+- Verified with Agent Browser: all updates render correctly, no errors
+- WhatsApp links verified: all use real number 593994226390
+- Mobile responsive verified on 390x844 viewport
+- Footer confirmed: "Hecho por Jimbra" → jimbra.net
 
 Stage Summary:
-- Complete website built with all required sections
-- Dark elegant theme with gold/amber accents
-- PWA-ready with manifest and service worker
-- SEO optimized with meta tags
-- Mobile-first responsive design verified
-- All WhatsApp links configured (placeholder numbers)
-- Footer with Jimbra branding confirmed
+- Site fully rebranded from "Ismisa Wellington" to "ISMISA"
+- Real contact info integrated (WhatsApp, email, address)
+- Logo generated and applied across site
+- "Rooftop" replaces "Terraza" everywhere
+- All Agent Browser tests passing, no errors

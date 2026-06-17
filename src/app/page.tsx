@@ -18,23 +18,21 @@ import {
   ExternalLink,
   Menu,
   X,
+  Mail,
+  Building2,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from "@/components/ui/carousel";
 
 // ─── Config ──────────────────────────────────────────
-const WHATSAPP_ISMISA = "593991234567"; // TODO: Replace with real number
-const WHATSAPP_JIMBRA = "593991234567"; // TODO: Replace with Isaac's number
-const INSTAGRAM_URL = "https://instagram.com/ismisa_wellington"; // TODO: Replace
-const FACEBOOK_URL = "https://facebook.com/ismisawellington"; // TODO: Replace
+const WHATSAPP_ISMISA = "593994226390";
+const WHATSAPP_JIMBRA = "593994226390"; // TODO: Replace with Isaac's real number
+const INSTAGRAM_URL = "https://instagram.com/ismisa_rooftop"; // TODO: Replace with real
+const FACEBOOK_URL = "https://facebook.com/ismisatour"; // Based on WhatsApp Business info
+const EMAIL_ISMISA = "wellfamite@gmail.com";
+const ADDRESS = "Av. 72 N-O, Guayaquil, Ecuador";
+const MAPS_COORDS = "-2.17,-79.93"; // Approximate Guayaquil center
 
 const whatsappLink = (number: string, text: string) =>
   `https://wa.me/${number}?text=${encodeURIComponent(text)}`;
@@ -61,8 +59,8 @@ const galleryItems = [
   },
   {
     image: "/images/terraza.png",
-    title: "Terraza",
-    description: "El mejor ambiente al aire libre de Guayaquil",
+    title: "Rooftop",
+    description: "El mejor ambiente en las alturas de Guayaquil",
     icon: TreePalm,
   },
 ];
@@ -94,7 +92,7 @@ const menuItems = [
     tag: "Clásico",
   },
   {
-    name: "Daikiri de Frutas",
+    name: "Daiquiri de Frutas",
     description: "Ron, frutas de temporada, azúcar, limón",
     tag: "Refrescante",
   },
@@ -109,7 +107,7 @@ const upcomingEvents = [
   },
   {
     date: "Sáb 15 Mar",
-    title: "Acústico en la Terraza",
+    title: "Acústico en el Rooftop",
     artist: "Valentina Mora — Voz y Guitarra",
     time: "20:30",
   },
@@ -173,7 +171,7 @@ function FloatingWhatsApp() {
     <a
       href={whatsappLink(
         WHATSAPP_ISMISA,
-        "Hola Ismisa Wellington! Quisiera hacer una reserva 🍸"
+        "Hola ISMISA! Quisiera hacer una reserva 🍸"
       )}
       target="_blank"
       rel="noopener noreferrer"
@@ -223,9 +221,16 @@ function Navbar() {
       <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
         <a
           href="#inicio"
-          className="font-[var(--font-playfair)] text-xl sm:text-2xl font-bold text-gold-gradient tracking-wide"
+          className="flex items-center gap-3 group"
         >
-          Ismisa Wellington
+          <img
+            src="/images/logo-ismisa.png"
+            alt="ISMISA Logo"
+            className="w-10 h-10 rounded-full border border-primary/30 group-hover:border-primary/60 transition-colors"
+          />
+          <span className="font-[var(--font-playfair)] text-xl sm:text-2xl font-bold text-gold-gradient tracking-wide">
+            ISMISA
+          </span>
         </a>
 
         {/* Desktop nav */}
@@ -244,7 +249,7 @@ function Navbar() {
             <a
               href={whatsappLink(
                 WHATSAPP_ISMISA,
-                "Hola! Quisiera hacer una reserva 🍸"
+                "Hola ISMISA! Quisiera hacer una reserva 🍸"
               )}
               target="_blank"
               rel="noopener noreferrer"
@@ -294,7 +299,7 @@ function Navbar() {
                 <a
                   href={whatsappLink(
                     WHATSAPP_ISMISA,
-                    "Hola! Quisiera hacer una reserva 🍸"
+                    "Hola ISMISA! Quisiera hacer una reserva 🍸"
                   )}
                   target="_blank"
                   rel="noopener noreferrer"
@@ -337,12 +342,20 @@ function HeroSection() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.2 }}
         >
+          {/* Logo in hero */}
+          <div className="mb-6 flex justify-center">
+            <img
+              src="/images/logo-ismisa.png"
+              alt="ISMISA Logo"
+              className="w-24 h-24 sm:w-32 sm:h-32 rounded-full border-2 border-primary/40 shadow-lg shadow-primary/20"
+            />
+          </div>
           <Badge
             variant="outline"
-            className="mb-6 border-primary/40 text-primary bg-primary/10 px-4 py-1.5 text-sm"
+            className="mb-4 border-primary/40 text-primary bg-primary/10 px-4 py-1.5 text-sm"
           >
             <Star className="w-3.5 h-3.5 mr-1.5" />
-            Terraza Bar Premium en Guayaquil
+            Rooftop Bar Premium en Guayaquil
           </Badge>
         </motion.div>
 
@@ -350,10 +363,9 @@ function HeroSection() {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.4 }}
-          className="font-[var(--font-playfair)] text-4xl sm:text-5xl md:text-7xl font-bold tracking-tight mb-6"
+          className="font-[var(--font-playfair)] text-5xl sm:text-6xl md:text-8xl font-bold tracking-tight mb-6"
         >
-          <span className="text-gold-gradient">Ismisa</span>{" "}
-          <span className="text-foreground">Wellington</span>
+          <span className="text-gold-gradient">ISMISA</span>
         </motion.h1>
 
         <motion.p
@@ -363,7 +375,7 @@ function HeroSection() {
           className="text-lg sm:text-xl text-muted-foreground max-w-2xl mx-auto mb-8 leading-relaxed"
         >
           Billar, tragos artesanales y música en vivo.
-          <br className="hidden sm:block" /> La terraza donde Guayaquil vive la
+          <br className="hidden sm:block" /> El rooftop donde Guayaquil vive la
           noche.
         </motion.p>
 
@@ -376,7 +388,7 @@ function HeroSection() {
           <a
             href={whatsappLink(
               WHATSAPP_ISMISA,
-              "Hola Ismisa Wellington! Quisiera hacer una reserva 🍸"
+              "Hola ISMISA! Quisiera hacer una reserva 🍸"
             )}
             target="_blank"
             rel="noopener noreferrer"
@@ -426,7 +438,7 @@ function GallerySection() {
               <span className="text-gold-gradient">Vive</span> la Experiencia
             </h2>
             <p className="mt-4 text-muted-foreground text-lg max-w-xl mx-auto">
-              Un lugar diseñado para noches memorables
+              Un rooftop diseñado para noches memorables
             </p>
           </div>
         </FadeInSection>
@@ -541,7 +553,7 @@ function EventsSection() {
             <a
               href={whatsappLink(
                 WHATSAPP_ISMISA,
-                "Hola! Quisiera reservar mesa para un evento 🎶"
+                "Hola ISMISA! Quisiera reservar mesa para un evento 🎶"
               )}
               target="_blank"
               rel="noopener noreferrer"
@@ -631,7 +643,7 @@ function AboutSection() {
             <div className="relative">
               <img
                 src="/images/about.png"
-                alt="Barman preparando cócteles en Ismisa Wellington"
+                alt="Barman preparando cócteles en ISMISA Rooftop"
                 className="rounded-2xl shadow-2xl shadow-black/30 w-full"
                 loading="lazy"
               />
@@ -654,11 +666,11 @@ function AboutSection() {
               </h2>
               <div className="space-y-4 text-muted-foreground leading-relaxed">
                 <p>
-                  <strong className="text-foreground">Ismisa Wellington</strong>{" "}
-                  nació de la pasión por crear un espacio donde la noche de
-                  Guayaquil encuentra su mejor expresión. Nuestra terraza es el
-                  lugar donde los amigos se reúnen, la música se siente y cada
-                  trago cuenta una historia.
+                  <strong className="text-foreground">ISMISA</strong> nació de
+                  la pasión por crear un espacio donde la noche de Guayaquil
+                  encuentra su mejor expresión. Nuestro rooftop es el lugar donde
+                  los amigos se reúnen, la música se siente y cada trago cuenta
+                  una historia.
                 </p>
                 <p>
                   Con mesas de billar profesionales, una carta de cócteles
@@ -667,9 +679,8 @@ function AboutSection() {
                   quienes buscan algo más que una noche cualquiera.
                 </p>
                 <p>
-                  Ubicados en el corazón de Guayaquil, abrimos de jueves a
-                  domingo para ofrecerte la mejor atmósfera nocturna de la
-                  ciudad.
+                  Ubicados en Guayaquil, abrimos de jueves a domingo para
+                  ofrecerte la mejor atmósfera nocturna de la ciudad.
                 </p>
               </div>
               <div className="flex gap-3 mt-8">
@@ -677,7 +688,7 @@ function AboutSection() {
                   href={INSTAGRAM_URL}
                   target="_blank"
                   rel="noopener noreferrer"
-                  aria-label="Instagram de Ismisa Wellington"
+                  aria-label="Instagram de ISMISA"
                 >
                   <Button
                     variant="outline"
@@ -691,7 +702,7 @@ function AboutSection() {
                   href={FACEBOOK_URL}
                   target="_blank"
                   rel="noopener noreferrer"
-                  aria-label="Facebook de Ismisa Wellington"
+                  aria-label="Facebook de ISMISA"
                 >
                   <Button
                     variant="outline"
@@ -704,7 +715,7 @@ function AboutSection() {
                 <a
                   href={whatsappLink(
                     WHATSAPP_ISMISA,
-                    "Hola Ismisa! Quiero saber más sobre el local 🍸"
+                    "Hola ISMISA! Quiero saber más sobre el rooftop 🍸"
                   )}
                   target="_blank"
                   rel="noopener noreferrer"
@@ -715,6 +726,18 @@ function AboutSection() {
                     className="border-primary/30 text-primary hover:bg-primary/10 hover:border-primary/50"
                   >
                     <MessageCircle className="w-5 h-5" />
+                  </Button>
+                </a>
+                <a
+                  href={`mailto:${EMAIL_ISMISA}`}
+                  aria-label="Email de ISMISA"
+                >
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    className="border-primary/30 text-primary hover:bg-primary/10 hover:border-primary/50"
+                  >
+                    <Mail className="w-5 h-5" />
                   </Button>
                 </a>
               </div>
@@ -752,14 +775,14 @@ function LocationSection() {
             <Card className="overflow-hidden border-border/50 bg-card h-full">
               <div className="aspect-[4/3] lg:aspect-auto lg:h-full min-h-[300px]">
                 <iframe
-                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d127486.234!2d-79.93!3d-2.17!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x902f72612bca3917%3A0x1a98508e5b51e4e5!2sGuayaquil%2C%20Ecuador!5e0!3m2!1ses!2sec!4v1700000000000"
+                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3986.8!2d-79.93!3d-2.17!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x902f72612bca3917%3A0x1a98508e5b51e4e5!2sGuayaquil%2C%20Ecuador!5e0!3m2!1ses!2sec!4v1700000000000"
                   width="100%"
                   height="100%"
                   style={{ border: 0, filter: "invert(90%) hue-rotate(180deg)" }}
                   allowFullScreen
                   loading="lazy"
                   referrerPolicy="no-referrer-when-downgrade"
-                  title="Ubicación de Ismisa Wellington en Guayaquil"
+                  title="Ubicación de ISMISA Rooftop en Guayaquil"
                   className="w-full h-full"
                 />
               </div>
@@ -781,23 +804,41 @@ function LocationSection() {
                         Dirección
                       </h3>
                       <p className="text-muted-foreground text-sm">
-                        Guayaquil, Ecuador
-                        <br />
-                        <span className="text-xs">
-                          (Dirección exacta por WhatsApp)
-                        </span>
+                        {ADDRESS}
                       </p>
                       <a
                         href={whatsappLink(
                           WHATSAPP_ISMISA,
-                          "Hola! Me pueden enviar la dirección exacta?"
+                          "Hola ISMISA! Me pueden enviar la dirección exacta?"
                         )}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="inline-flex items-center gap-1 text-primary text-sm mt-2 hover:underline"
                       >
-                        Pedir dirección
+                        Pedir dirección exacta
                         <ExternalLink className="w-3 h-3" />
+                      </a>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Email */}
+              <Card className="border-border/50 bg-card">
+                <CardContent className="p-5 sm:p-6">
+                  <div className="flex items-start gap-4">
+                    <div className="w-12 h-12 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center shrink-0">
+                      <Mail className="w-5 h-5 text-primary" />
+                    </div>
+                    <div>
+                      <h3 className="font-semibold text-foreground mb-1">
+                        Email
+                      </h3>
+                      <a
+                        href={`mailto:${EMAIL_ISMISA}`}
+                        className="text-primary text-sm hover:underline"
+                      >
+                        {EMAIL_ISMISA}
                       </a>
                     </div>
                   </div>
@@ -842,7 +883,7 @@ function LocationSection() {
               <a
                 href={whatsappLink(
                   WHATSAPP_ISMISA,
-                  "Hola Ismisa! Quisiera hacer una reserva 🍸"
+                  "Hola ISMISA! Quisiera hacer una reserva 🍸"
                 )}
                 target="_blank"
                 rel="noopener noreferrer"
@@ -867,13 +908,20 @@ function Footer() {
     <footer className="bg-secondary/30 border-t border-border/30">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10">
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-          <div className="text-center sm:text-left">
-            <h3 className="font-[var(--font-playfair)] text-xl font-bold text-gold-gradient">
-              Ismisa Wellington
-            </h3>
-            <p className="text-muted-foreground text-sm mt-1">
-              Terraza Bar en Guayaquil — Billar, Tragos y Música en Vivo
-            </p>
+          <div className="flex items-center gap-3">
+            <img
+              src="/images/logo-ismisa.png"
+              alt="ISMISA Logo"
+              className="w-10 h-10 rounded-full border border-primary/30"
+            />
+            <div className="text-center sm:text-left">
+              <h3 className="font-[var(--font-playfair)] text-xl font-bold text-gold-gradient">
+                ISMISA
+              </h3>
+              <p className="text-muted-foreground text-sm mt-0.5">
+                Rooftop Bar en Guayaquil — Billar, Tragos y Música en Vivo
+              </p>
+            </div>
           </div>
 
           <div className="flex items-center gap-4">
@@ -895,6 +943,13 @@ function Footer() {
             >
               <Facebook className="w-5 h-5" />
             </a>
+            <a
+              href={`mailto:${EMAIL_ISMISA}`}
+              className="text-muted-foreground hover:text-primary transition-colors"
+              aria-label="Email"
+            >
+              <Mail className="w-5 h-5" />
+            </a>
           </div>
         </div>
 
@@ -902,7 +957,7 @@ function Footer() {
 
         <div className="flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-muted-foreground">
           <p>
-            © {new Date().getFullYear()} Ismisa Wellington. Todos los derechos
+            © {new Date().getFullYear()} ISMISA. Todos los derechos
             reservados.
           </p>
           <p>

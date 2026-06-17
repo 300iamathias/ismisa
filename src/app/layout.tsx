@@ -24,18 +24,19 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  title: "Ismisa Wellington | Terraza Bar en Guayaquil — Billar, Tragos y Música en Vivo",
+  title: "ISMISA | Rooftop Bar en Guayaquil — Billar, Tragos y Música en Vivo",
   description:
-    "Terraza bar premium en Guayaquil con billar, tragos artesanales y música en vivo. El mejor ambiente nocturno los fines de semana. ¡Reserva tu mesa por WhatsApp!",
+    "Rooftop bar premium en Guayaquil con billar, tragos artesanales y música en vivo. El mejor ambiente nocturno los fines de semana. ¡Reserva tu mesa por WhatsApp!",
   keywords: [
     "bar Guayaquil",
-    "terraza Guayaquil",
+    "rooftop Guayaquil",
     "billar Guayaquil",
     "música en vivo Guayaquil",
     "tragos artesanales",
     "bar nocturno Ecuador",
-    "Ismisa Wellington",
-    "terraza bar",
+    "ISMISA",
+    "ISMISA Rooftop",
+    "rooftop bar",
   ],
   authors: [{ name: "Jimbra", url: "https://jimbra.net" }],
   creator: "Jimbra",
@@ -46,11 +47,11 @@ export const metadata: Metadata = {
   },
   manifest: "/manifest.json",
   openGraph: {
-    title: "Ismisa Wellington | Terraza Bar en Guayaquil",
+    title: "ISMISA | Rooftop Bar en Guayaquil",
     description:
-      "Terraza bar premium en Guayaquil con billar, tragos artesanales y música en vivo. ¡Reserva tu mesa!",
+      "Rooftop bar premium en Guayaquil con billar, tragos artesanales y música en vivo. ¡Reserva tu mesa!",
     url: "https://ismisa.jimbra.net",
-    siteName: "Ismisa Wellington",
+    siteName: "ISMISA",
     locale: "es_EC",
     type: "website",
     images: [
@@ -58,15 +59,15 @@ export const metadata: Metadata = {
         url: "/images/hero.png",
         width: 1344,
         height: 768,
-        alt: "Ismisa Wellington - Terraza Bar en Guayaquil",
+        alt: "ISMISA - Rooftop Bar en Guayaquil",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Ismisa Wellington | Terraza Bar en Guayaquil",
+    title: "ISMISA | Rooftop Bar en Guayaquil",
     description:
-      "Terraza bar premium con billar, tragos artesanales y música en vivo. ¡Reserva tu mesa!",
+      "Rooftop bar premium con billar, tragos artesanales y música en vivo. ¡Reserva tu mesa!",
     images: ["/images/hero.png"],
   },
   robots: {
@@ -86,7 +87,7 @@ export default function RootLayout({
         <link rel="manifest" href="/manifest.json" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-        <meta name="apple-mobile-web-app-title" content="Ismisa" />
+        <meta name="apple-mobile-web-app-title" content="ISMISA" />
       </head>
       <body
         className={`${playfair.variable} ${inter.variable} antialiased bg-background text-foreground`}
