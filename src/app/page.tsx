@@ -31,7 +31,7 @@ const WHATSAPP_JIMBRA = "593994226390"; // TODO: Replace with Isaac's real numbe
 const INSTAGRAM_URL = "https://instagram.com/ismisa_rooftop"; // TODO: Replace with real
 const FACEBOOK_URL = "https://facebook.com/ismisatour"; // Based on WhatsApp Business info
 const EMAIL_ISMISA = "wellfamite@gmail.com";
-const ADDRESS = "Av. 72 N-O, Guayaquil, Ecuador";
+const ADDRESS = "Ciudadela Villa Bonita, Guayaquil, Ecuador";
 const MAPS_COORDS = "-2.17,-79.93"; // Approximate Guayaquil center
 
 const whatsappLink = (number: string, text: string) =>
@@ -67,6 +67,21 @@ const galleryItems = [
 
 const menuItems = [
   {
+    name: "La Tricolor 🇪🇨",
+    description: "Aguardiente, limón, hierbabuena, soda — el trago de la selección",
+    tag: "Mundial",
+  },
+  {
+    name: "El Canarinho 🇧🇷",
+    description: "Cachaça, lima, azúcar, frutas tropicales — espíritu brasileño",
+    tag: "Mundial",
+  },
+  {
+    name: "La Albiceleste 🇦🇷",
+    description: "Fernet, cola artesanal, hielo — clásico argentino en el rooftop",
+    tag: "Mundial",
+  },
+  {
     name: "Wellington Sour",
     description: "Whisky, limón, clara de huevo, amargo de angostura",
     tag: "Signature",
@@ -91,37 +106,69 @@ const menuItems = [
     description: "Selección de cervezas locales y de importación",
     tag: "Clásico",
   },
+];
+
+// ─── Mundial 2026 — Grupo E (fallback, overridden by API) ──
+interface MatchData {
+  date: string;
+  title: string;
+  venue: string;
+  time: string;
+  result: string | null;
+  played: boolean;
+}
+
+const ecuadorMatchesFallback: MatchData[] = [
   {
-    name: "Daiquiri de Frutas",
-    description: "Ron, frutas de temporada, azúcar, limón",
-    tag: "Refrescante",
+    date: "Dom 14 Jun",
+    title: "Costa de Marfil vs Ecuador",
+    venue: "Filadelfia, EE.UU.",
+    time: "18:00",
+    result: "0-1",
+    played: true,
+  },
+  {
+    date: "Sáb 20 Jun",
+    title: "Ecuador vs Curazao",
+    venue: "Kansas City, EE.UU.",
+    time: "21:00",
+    result: null,
+    played: false,
+  },
+  {
+    date: "Jue 25 Jun",
+    title: "Ecuador vs Alemania",
+    venue: "Estadio por confirmar",
+    time: "15:00",
+    result: null,
+    played: false,
   },
 ];
 
 const upcomingEvents = [
   {
-    date: "Vie 14 Mar",
+    date: "Sáb 20 Jun",
+    title: "Ecuador vs Curazao — En vivo",
+    artist: "Pantalla gigante · Tragos mundialistas · Ambiente de selección",
+    time: "21:00",
+  },
+  {
+    date: "Jue 25 Jun",
+    title: "Ecuador vs Alemania — En vivo",
+    artist: "La Tri busca la clasificación · Reservá tu mesa",
+    time: "15:00",
+  },
+  {
+    date: "Vie 27 Jun",
     title: "Noche de Salsa",
     artist: "DJ Carlos Rivera + Orquesta La Clave",
     time: "21:00",
   },
   {
-    date: "Sáb 15 Mar",
+    date: "Sáb 28 Jun",
     title: "Acústico en el Rooftop",
     artist: "Valentina Mora — Voz y Guitarra",
     time: "20:30",
-  },
-  {
-    date: "Vie 21 Mar",
-    title: "Reggae Night",
-    artist: "Roots Sound System + Invitado sorpresa",
-    time: "21:00",
-  },
-  {
-    date: "Sáb 22 Mar",
-    title: "Tributo al Rock Clásico",
-    artist: "Band: Los Veteranos",
-    time: "20:00",
   },
 ];
 
@@ -159,13 +206,15 @@ function FadeInSection({
 }
 
 // ─── Floating WhatsApp Button ────────────────────────
-function FloatingWhatsApp() {
+function FloatingWhatsApp({ hidden }: { hidden?: boolean }) {
   const [pulse, setPulse] = useState(true);
 
   useEffect(() => {
     const timer = setTimeout(() => setPulse(false), 4000);
     return () => clearTimeout(timer);
   }, []);
+
+  if (hidden) return null;
 
   return (
     <a
@@ -191,9 +240,8 @@ function FloatingWhatsApp() {
 }
 
 // ─── Navbar ──────────────────────────────────────────
-function Navbar() {
+function Navbar({ menuOpen, onToggleMenu }: { menuOpen: boolean; onToggleMenu: () => void }) {
   const [scrolled, setScrolled] = useState(false);
-  const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 60);
@@ -201,8 +249,21 @@ function Navbar() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
+  // Lock body scroll when mobile menu is open
+  useEffect(() => {
+    if (menuOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [menuOpen]);
+
   const navLinks = [
     { href: "#inicio", label: "Inicio" },
+    { href: "#mundial", label: "⚽ Mundial" },
     { href: "#galeria", label: "Galería" },
     { href: "#eventos", label: "Eventos" },
     { href: "#menu", label: "Menú" },
@@ -210,111 +271,151 @@ function Navbar() {
     { href: "#ubicacion", label: "Ubicación" },
   ];
 
-  return (
-    <header
-      className={`fixed top-0 left-0 right-0 z-40 transition-all duration-500 ${
-        scrolled
-          ? "bg-[oklch(0.12_0.008_80)]/95 backdrop-blur-md shadow-lg shadow-black/30 border-b border-gold/10"
-          : "bg-transparent"
-      }`}
-    >
-      <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-        <a
-          href="#inicio"
-          className="flex items-center gap-3 group"
-        >
-          <img
-            src="/images/logo-ismisa.png"
-            alt="ISMISA Logo"
-            className="w-10 h-10 rounded-full border border-primary/30 group-hover:border-primary/60 transition-colors"
-          />
-          <span className="font-[var(--font-playfair)] text-xl sm:text-2xl font-bold text-gold-gradient tracking-wide">
-            ISMISA
-          </span>
-        </a>
+  const handleNavClick = (href: string) => {
+    onToggleMenu();
+    setTimeout(() => {
+      const el = document.querySelector(href);
+      if (el) {
+        el.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    }, 150);
+  };
 
-        {/* Desktop nav */}
-        <ul className="hidden md:flex items-center gap-1">
-          {navLinks.map((link) => (
-            <li key={link.href}>
+  return (
+    <>
+      {/* Header bar */}
+      <header
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
+          scrolled || menuOpen
+            ? "bg-[oklch(0.12_0.008_80)]/95 backdrop-blur-md shadow-lg shadow-black/30 border-b border-gold/10"
+            : "bg-transparent"
+        }`}
+      >
+        <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+          <a
+            href="#inicio"
+            onClick={(e) => {
+              e.preventDefault();
+              if (menuOpen) onToggleMenu();
+              window.scrollTo({ top: 0, behavior: "smooth" });
+            }}
+            className="flex items-center gap-3 group"
+          >
+            <img
+              src="/images/logo-ismisa.png"
+              alt="ISMISA Logo"
+              className="w-10 h-10 rounded-full border border-primary/30 group-hover:border-primary/60 transition-colors"
+            />
+            <span className="font-[var(--font-playfair)] text-xl sm:text-2xl font-bold text-gold-gradient tracking-wide">
+              ISMISA
+            </span>
+          </a>
+
+          {/* Desktop nav */}
+          <ul className="hidden md:flex items-center gap-1">
+            {navLinks.map((link) => (
+              <li key={link.href}>
+                <a
+                  href={link.href}
+                  className="px-3 py-2 text-sm text-muted-foreground hover:text-primary transition-colors rounded-lg hover:bg-secondary/50"
+                >
+                  {link.label}
+                </a>
+              </li>
+            ))}
+            <li className="ml-2">
               <a
-                href={link.href}
-                className="px-3 py-2 text-sm text-muted-foreground hover:text-primary transition-colors rounded-lg hover:bg-secondary/50"
+                href={whatsappLink(
+                  WHATSAPP_ISMISA,
+                  "Hola ISMISA! Quisiera hacer una reserva 🍸"
+                )}
+                target="_blank"
+                rel="noopener noreferrer"
               >
-                {link.label}
+                <Button
+                  size="sm"
+                  className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold"
+                >
+                  Reservar
+                </Button>
               </a>
             </li>
-          ))}
-          <li className="ml-2">
-            <a
-              href={whatsappLink(
-                WHATSAPP_ISMISA,
-                "Hola ISMISA! Quisiera hacer una reserva 🍸"
-              )}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <Button
-                size="sm"
-                className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold"
-              >
-                Reservar
-              </Button>
-            </a>
-          </li>
-        </ul>
+          </ul>
 
-        {/* Mobile menu toggle */}
-        <button
-          className="md:hidden p-2 text-foreground hover:text-primary transition-colors"
-          onClick={() => setMenuOpen(!menuOpen)}
-          aria-label="Abrir menú"
-        >
-          {menuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-        </button>
-      </nav>
+          {/* Mobile menu toggle */}
+          <button
+            className="md:hidden p-2 text-foreground hover:text-primary transition-colors z-[60] relative"
+            onClick={onToggleMenu}
+            aria-label={menuOpen ? "Cerrar menú" : "Abrir menú"}
+          >
+            {menuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+          </button>
+        </nav>
+      </header>
 
-      {/* Mobile nav */}
+      {/* Mobile nav — Full screen overlay */}
       <AnimatePresence>
         {menuOpen && (
           <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: "auto" }}
-            exit={{ opacity: 0, height: 0 }}
-            className="md:hidden bg-[oklch(0.12_0.008_80)]/98 backdrop-blur-lg border-b border-gold/10 overflow-hidden"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            className="fixed inset-0 z-40 md:hidden bg-[oklch(0.12_0.008_80)]/98 backdrop-blur-lg"
+            onClick={onToggleMenu}
           >
-            <ul className="px-4 py-4 space-y-1">
-              {navLinks.map((link) => (
-                <li key={link.href}>
-                  <a
-                    href={link.href}
-                    onClick={() => setMenuOpen(false)}
-                    className="block px-4 py-3 text-foreground/80 hover:text-primary hover:bg-secondary/50 rounded-lg transition-colors"
+            <div
+              className="flex flex-col items-center justify-center h-full pt-16 pb-8 px-6"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <ul className="w-full max-w-sm space-y-1">
+                {navLinks.map((link, i) => (
+                  <motion.li
+                    key={link.href}
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: i * 0.05 }}
                   >
-                    {link.label}
-                  </a>
-                </li>
-              ))}
-              <li className="pt-2">
-                <a
-                  href={whatsappLink(
-                    WHATSAPP_ISMISA,
-                    "Hola ISMISA! Quisiera hacer una reserva 🍸"
-                  )}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="block"
+                    <a
+                      href={link.href}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        handleNavClick(link.href);
+                      }}
+                      className="block px-5 py-4 text-lg text-foreground/90 hover:text-primary hover:bg-secondary/50 rounded-xl transition-colors font-medium active:bg-secondary/80 active:scale-[0.98]"
+                    >
+                      {link.label}
+                    </a>
+                  </motion.li>
+                ))}
+                <motion.li
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: navLinks.length * 0.05 + 0.1 }}
+                  className="pt-4"
                 >
-                  <Button className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-semibold">
-                    Reservar por WhatsApp
-                  </Button>
-                </a>
-              </li>
-            </ul>
+                  <a
+                    href={whatsappLink(
+                      WHATSAPP_ISMISA,
+                      "Hola ISMISA! Quisiera hacer una reserva 🍸"
+                    )}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="block"
+                    onClick={() => onToggleMenu()}
+                  >
+                    <Button className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-semibold h-14 text-base glow-gold">
+                      <MessageCircle className="w-5 h-5 mr-2" />
+                      Reservar por WhatsApp
+                    </Button>
+                  </a>
+                </motion.li>
+              </ul>
+            </div>
           </motion.div>
         )}
       </AnimatePresence>
-    </header>
+    </>
   );
 }
 
@@ -368,6 +469,26 @@ function HeroSection() {
           <span className="text-gold-gradient">ISMISA</span>
         </motion.h1>
 
+        {/* Mundial 2026 Banner */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.6, delay: 0.55 }}
+          className="mb-6"
+        >
+          <a href="#mundial">
+            <div className="inline-flex items-center gap-2 bg-gradient-to-r from-primary/20 via-primary/30 to-primary/20 border border-primary/40 rounded-full px-4 sm:px-6 py-2 sm:py-2.5 cursor-pointer hover:border-primary/70 transition-all duration-300 group">
+              <span className="text-lg">⚽</span>
+              <span className="text-primary font-semibold text-sm sm:text-base group-hover:text-primary/90">
+                Viví el Mundial en ISMISA
+              </span>
+              <span className="text-muted-foreground text-xs sm:text-sm">
+                — Próximo: Ecuador vs Curazao · Sáb 21:00
+              </span>
+            </div>
+          </a>
+        </motion.div>
+
         <motion.p
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
@@ -416,6 +537,393 @@ function HeroSection() {
 
       {/* Bottom fade */}
       <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-background to-transparent pointer-events-none" />
+    </section>
+  );
+}
+
+// ─── Today's match data type ──────────────────────────
+interface TodayMatch {
+  time: string;
+  home: string;
+  away: string;
+  homeFlag: string;
+  awayFlag: string;
+  score: string | null;
+  status: "played" | "live" | "upcoming";
+  group: string;
+  venue: string;
+}
+
+// ─── World Cup Section (auto-refreshing) ─────────────
+function WorldCupSection() {
+  const [matches, setMatches] = useState<MatchData[]>(ecuadorMatchesFallback);
+  const [lastUpdated, setLastUpdated] = useState<string | null>(null);
+  const [liveSource, setLiveSource] = useState<string>("fallback");
+
+  // Today's matches state
+  const [todayMatches, setTodayMatches] = useState<TodayMatch[]>([]);
+  const [todayDate, setTodayDate] = useState<string>("");
+  const [todaySource, setTodaySource] = useState<string>("fallback");
+
+  // Fetch Ecuador's group scores
+  const fetchScores = async () => {
+    try {
+      const res = await fetch("/api/scores");
+      if (!res.ok) throw new Error("API error");
+      const data = await res.json();
+      if (data.matches && Array.isArray(data.matches) && data.matches.length > 0) {
+        setMatches(data.matches);
+        setLastUpdated(data.updated);
+        setLiveSource(data.source);
+      }
+    } catch {
+      // Keep fallback data on error
+    }
+  };
+
+  // Fetch today's matches
+  const fetchTodayMatches = async () => {
+    try {
+      const res = await fetch("/api/today-matches");
+      if (!res.ok) throw new Error("API error");
+      const data = await res.json();
+      setTodayMatches(data.matches || []);
+      setTodayDate(data.date || "");
+      setTodaySource(data.source || "fallback");
+    } catch {
+      // Keep empty on error
+    }
+  };
+
+  // Auto-fetch on mount + every 3 minutes
+  useEffect(() => {
+    fetchScores();
+    fetchTodayMatches();
+    const interval = setInterval(() => {
+      fetchScores();
+      fetchTodayMatches();
+    }, 3 * 60 * 1000);
+    return () => clearInterval(interval);
+  }, []);
+
+  // Check if any Ecuador match is today
+  const ecuadorToday = todayMatches.some(
+    (m) => m.home === "Ecuador" || m.away === "Ecuador"
+  );
+
+  return (
+    <section id="mundial" className="py-20 sm:py-28 bg-background relative overflow-hidden">
+      {/* Subtle background accent */}
+      <div className="absolute top-0 left-1/4 w-72 h-72 bg-primary/5 rounded-full blur-[100px] pointer-events-none" />
+      <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-primary/5 rounded-full blur-[120px] pointer-events-none" />
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <FadeInSection>
+          <div className="text-center mb-14">
+            <Badge
+              variant="outline"
+              className="mb-4 border-primary/30 text-primary"
+            >
+              <span className="mr-1.5">⚽</span>
+              Mundial 2026 — Grupo E
+            </Badge>
+            <h2 className="font-[var(--font-playfair)] text-3xl sm:text-4xl md:text-5xl font-bold">
+              Viví el <span className="text-gold-gradient">Mundial</span> en ISMISA
+            </h2>
+            <p className="mt-4 text-muted-foreground text-lg max-w-xl mx-auto">
+              Pantalla gigante, tragos de selección y el ambiente que se siente
+            </p>
+          </div>
+        </FadeInSection>
+
+        {/* Ecuador's Group E Match cards */}
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 max-w-4xl mx-auto">
+          {matches.map((match, i) => (
+            <FadeInSection key={match.title} delay={i * 0.1}>
+              <Card className={`group border-border/50 bg-card hover:border-primary/30 transition-all duration-300 h-full ${match.played ? "opacity-70" : "hover:shadow-lg hover:shadow-primary/10"}`}>
+                <CardContent className="p-5 sm:p-6 text-center">
+                  <p className="text-primary text-sm font-semibold mb-2">
+                    {match.date}
+                  </p>
+                  <h3 className="font-semibold text-foreground text-base mb-1">
+                    {match.title}
+                  </h3>
+                  <p className="text-muted-foreground text-xs mb-3">
+                    {match.venue}
+                  </p>
+                  <div className="flex items-center justify-center gap-2">
+                    <Clock className="w-3.5 h-3.5 text-primary" />
+                    <span className="text-sm text-primary font-medium">
+                      {match.time} Ecuador
+                    </span>
+                  </div>
+                  {match.played && match.result && (
+                    <div className="mt-3 pt-3 border-t border-border/30">
+                      <span className="text-xs text-muted-foreground">Resultado</span>
+                      <p className="text-foreground font-bold text-lg">{match.result}</p>
+                    </div>
+                  )}
+                  {!match.played && (
+                    <div className="mt-3 pt-3 border-t border-border/30">
+                      <a
+                        href={whatsappLink(
+                          WHATSAPP_ISMISA,
+                          `Hola ISMISA! Quiero reservar mesa para ${match.title} ⚽`
+                        )}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <Button
+                          size="sm"
+                          className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold w-full glow-gold"
+                        >
+                          <MessageCircle className="w-4 h-4 mr-1.5" />
+                          Reservar mesa
+                        </Button>
+                      </a>
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+            </FadeInSection>
+          ))}
+        </div>
+
+        {/* ─── Partidos de Hoy ────────────────────────────── */}
+        {todayMatches.length > 0 && (
+          <FadeInSection delay={0.3}>
+            <div className="mt-14 max-w-3xl mx-auto">
+              {/* Section header */}
+              <div className="text-center mb-6">
+                <Badge
+                  variant="outline"
+                  className="mb-3 border-primary/30 text-primary"
+                >
+                  <Calendar className="w-3.5 h-3.5 mr-1.5" />
+                  Partidos de Hoy
+                </Badge>
+                <h3 className="font-[var(--font-playfair)] text-xl sm:text-2xl font-bold text-foreground">
+                  {todayDate && (
+                    <span className="capitalize">{todayDate}</span>
+                  )}
+                </h3>
+              </div>
+
+              {/* Match list */}
+              <Card className="border-border/50 bg-card overflow-hidden">
+                <CardContent className="p-0">
+                  <div className="divide-y divide-border/30">
+                    {todayMatches.map((match, i) => {
+                      const isEcuador = match.home === "Ecuador" || match.away === "Ecuador";
+                      return (
+                        <div
+                          key={`${match.home}-${match.away}-${i}`}
+                          className={`px-4 sm:px-6 py-3.5 transition-colors ${
+                            isEcuador
+                              ? "bg-primary/10 hover:bg-primary/15"
+                              : "hover:bg-secondary/30"
+                          }`}
+                        >
+                          {/* Mobile layout (stacked) */}
+                          <div className="flex sm:hidden items-center gap-3">
+                            {/* Time / Live badge */}
+                            <div className="shrink-0 w-12 text-center">
+                              {match.status === "live" ? (
+                                <span className="inline-flex items-center gap-1 text-xs font-bold text-red-400">
+                                  <span className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse" />
+                                  VIVO
+                                </span>
+                              ) : (
+                                <span className="text-xs text-primary font-semibold">
+                                  {match.time}
+                                </span>
+                              )}
+                            </div>
+
+                            {/* Teams + Score (stacked) */}
+                            <div className="flex-1 min-w-0">
+                              <div className="flex items-center justify-between gap-2">
+                                <div className="flex items-center gap-1.5 min-w-0">
+                                  <span className="text-base">{match.homeFlag}</span>
+                                  <span className={`text-sm font-semibold truncate ${isEcuador && match.home === "Ecuador" ? "text-primary" : "text-foreground"}`}>
+                                    {match.home}
+                                  </span>
+                                </div>
+                                {match.score && (
+                                  <span className={`font-bold text-sm shrink-0 ${match.status === "live" ? "text-red-400" : "text-foreground"}`}>
+                                    {match.score.split("-")[0]}
+                                  </span>
+                                )}
+                              </div>
+                              <div className="flex items-center justify-between gap-2 mt-0.5">
+                                <div className="flex items-center gap-1.5 min-w-0">
+                                  <span className="text-base">{match.awayFlag}</span>
+                                  <span className={`text-sm font-semibold truncate ${isEcuador && match.away === "Ecuador" ? "text-primary" : "text-foreground"}`}>
+                                    {match.away}
+                                  </span>
+                                </div>
+                                {match.score ? (
+                                  <span className={`font-bold text-sm shrink-0 ${match.status === "live" ? "text-red-400" : "text-foreground"}`}>
+                                    {match.score.split("-")[1]}
+                                  </span>
+                                ) : (
+                                  <span className="text-[10px] text-muted-foreground shrink-0">
+                                    {match.time}
+                                  </span>
+                                )}
+                              </div>
+                            </div>
+
+                            {/* Group badge */}
+                            <span className="text-[10px] text-muted-foreground shrink-0">
+                              {match.group}
+                            </span>
+                          </div>
+
+                          {/* Desktop layout (horizontal) */}
+                          <div className="hidden sm:flex items-center">
+                            {/* Time */}
+                            <div className="w-16 shrink-0 text-center">
+                              {match.status === "live" ? (
+                                <span className="inline-flex items-center gap-1 text-xs font-bold text-red-400">
+                                  <span className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse" />
+                                  VIVO
+                                </span>
+                              ) : (
+                                <span className="text-sm text-primary font-semibold">
+                                  {match.time}
+                                </span>
+                              )}
+                            </div>
+
+                            {/* Teams + Score */}
+                            <div className="flex-1 min-w-0 flex items-center justify-center gap-3">
+                              {/* Home team */}
+                              <div className="flex items-center gap-1.5 justify-end flex-1 min-w-0">
+                                <span className={`text-sm font-semibold truncate ${isEcuador && match.home === "Ecuador" ? "text-primary" : "text-foreground"}`}>
+                                  {match.home}
+                                </span>
+                                <span className="text-lg">{match.homeFlag}</span>
+                              </div>
+
+                              {/* Score or vs */}
+                              <div className="w-16 shrink-0 text-center">
+                                {match.score ? (
+                                  <span className={`font-bold text-base ${match.status === "live" ? "text-red-400" : "text-foreground"}`}>
+                                    {match.score}
+                                  </span>
+                                ) : (
+                                  <span className="text-xs text-muted-foreground font-medium">vs</span>
+                                )}
+                              </div>
+
+                              {/* Away team */}
+                              <div className="flex items-center gap-1.5 flex-1 min-w-0">
+                                <span className="text-lg">{match.awayFlag}</span>
+                                <span className={`text-sm font-semibold truncate ${isEcuador && match.away === "Ecuador" ? "text-primary" : "text-foreground"}`}>
+                                  {match.away}
+                                </span>
+                              </div>
+                            </div>
+
+                            {/* Group */}
+                            <div className="w-20 shrink-0 text-right">
+                              <span className="text-xs text-muted-foreground">
+                                {match.group}
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Ecuador today CTA */}
+              {ecuadorToday && (
+                <div className="text-center mt-5">
+                  <a
+                    href={whatsappLink(
+                      WHATSAPP_ISMISA,
+                      "Hola ISMISA! Quiero reservar mesa para el partido de Ecuador hoy ⚽🇪🇨"
+                    )}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <Button
+                      className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold glow-gold transition-all duration-300 hover:scale-105"
+                    >
+                      <MessageCircle className="w-4 h-4 mr-2" />
+                      🇪🇨 Reservar para Ecuador hoy
+                    </Button>
+                  </a>
+                </div>
+              )}
+            </div>
+          </FadeInSection>
+        )}
+
+        {/* No matches today message */}
+        {todayMatches.length === 0 && todaySource !== "fallback" && (
+          <FadeInSection delay={0.3}>
+            <div className="mt-12 text-center max-w-md mx-auto">
+              <Card className="border-border/50 bg-card">
+                <CardContent className="p-6">
+                  <p className="text-3xl mb-2">🏐</p>
+                  <p className="text-muted-foreground text-sm">
+                    Hoy no hay partidos del Mundial
+                  </p>
+                  <p className="text-muted-foreground text-xs mt-1">
+                    Volvé mañana para más acción ⚽
+                  </p>
+                </CardContent>
+              </Card>
+            </div>
+          </FadeInSection>
+        )}
+
+        {/* CTA + live indicator */}
+        <FadeInSection delay={0.4}>
+          <div className="text-center mt-10">
+            <p className="text-muted-foreground text-sm mb-4">
+              🇪🇨 Cada partido de Ecuador · Pantalla gigante · Tragos mundialistas
+            </p>
+            {/* Live status indicator */}
+            <div className="flex items-center justify-center gap-2 mb-4">
+              <span className={`inline-block w-2 h-2 rounded-full ${liveSource === "live" || todaySource === "live" ? "bg-green-500 animate-pulse" : liveSource === "cache" || todaySource === "cache" ? "bg-yellow-500" : "bg-muted-foreground/50"}`} />
+              <span className="text-xs text-muted-foreground">
+                {(liveSource === "live" || todaySource === "live")
+                  ? "Resultados en vivo"
+                  : (liveSource === "cache" || todaySource === "cache")
+                  ? "Última actualización cacheada"
+                  : "Datos por defecto"}
+                {lastUpdated && (
+                  <span className="ml-1">
+                    · {new Date(lastUpdated).toLocaleTimeString("es-EC", { hour: "2-digit", minute: "2-digit" })}
+                  </span>
+                )}
+              </span>
+            </div>
+            <a
+              href={whatsappLink(
+                WHATSAPP_ISMISA,
+                "Hola ISMISA! Quiero reservar mesa para el próximo partido de Ecuador ⚽🇪🇨"
+              )}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <Button
+                size="lg"
+                className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold glow-gold transition-all duration-300 hover:scale-105"
+              >
+                <MessageCircle className="w-5 h-5 mr-2" />
+                Reservar para el Mundial
+              </Button>
+            </a>
+          </div>
+        </FadeInSection>
+      </div>
     </section>
   );
 }
@@ -979,11 +1487,15 @@ function Footer() {
 
 // ─── Main Page ───────────────────────────────────────
 export default function Home() {
+  const [menuOpen, setMenuOpen] = useState(false);
+
   return (
     <div className="min-h-screen flex flex-col bg-background">
-      <Navbar />
+      <Navbar menuOpen={menuOpen} onToggleMenu={() => setMenuOpen(!menuOpen)} />
       <main className="flex-1">
         <HeroSection />
+        <div className="section-divider" />
+        <WorldCupSection />
         <div className="section-divider" />
         <GallerySection />
         <div className="section-divider" />
@@ -996,7 +1508,7 @@ export default function Home() {
         <LocationSection />
       </main>
       <Footer />
-      <FloatingWhatsApp />
+      <FloatingWhatsApp hidden={menuOpen} />
     </div>
   );
 }
