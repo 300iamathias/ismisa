@@ -20,6 +20,10 @@ import {
   X,
   Mail,
   Building2,
+  Trophy,
+  Globe2,
+  Users,
+  Map,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -67,19 +71,19 @@ const galleryItems = [
 
 const menuItems = [
   {
-    name: "La Tricolor 🇪🇨",
-    description: "Aguardiente, limón, hierbabuena, soda — el trago de la selección",
-    tag: "Mundial",
+    name: "Whisky",
+    description: "Selección premium: Johnnie Walker, Jack Daniel's, Chivas Regal y más",
+    tag: "Premium",
   },
   {
-    name: "El Canarinho 🇧🇷",
-    description: "Cachaça, lima, azúcar, frutas tropicales — espíritu brasileño",
-    tag: "Mundial",
+    name: "Cerveza",
+    description: "Artesanales y de importación: Pilsener, Club, Heineken, Corona",
+    tag: "Clásico",
   },
   {
-    name: "La Albiceleste 🇦🇷",
-    description: "Fernet, cola artesanal, hielo — clásico argentino en el rooftop",
-    tag: "Mundial",
+    name: "Ron",
+    description: "Ron añejo y blanco: Abuelo, Zacapa, Havana Club, Barceló",
+    tag: "Favorito",
   },
   {
     name: "Wellington Sour",
@@ -102,61 +106,70 @@ const menuItems = [
     tag: "Premium",
   },
   {
-    name: "Cerveza Artesanal",
-    description: "Selección de cervezas locales y de importación",
+    name: "Tequila",
+    description: "Blanco y reposado: José Cuervo, Patrón, Don Julio",
     tag: "Clásico",
   },
 ];
 
-// ─── Mundial 2026 — Grupo E (fallback, overridden by API) ──
+// ─── Mundial 2026 — Static Ecuador Match Schedule ───
 interface MatchData {
   date: string;
   title: string;
   venue: string;
   time: string;
-  result: string | null;
-  played: boolean;
 }
 
-const ecuadorMatchesFallback: MatchData[] = [
+const ecuadorMatches: MatchData[] = [
   {
     date: "Dom 14 Jun",
     title: "Costa de Marfil vs Ecuador",
     venue: "Filadelfia, EE.UU.",
     time: "18:00",
-    result: "0-1",
-    played: true,
   },
   {
     date: "Sáb 20 Jun",
     title: "Ecuador vs Curazao",
     venue: "Kansas City, EE.UU.",
-    time: "21:00",
-    result: null,
-    played: false,
+    time: "19:00",
   },
   {
-    date: "Jue 25 Jun",
+    date: "Lun 22 Jun",
     title: "Ecuador vs Alemania",
-    venue: "Estadio por confirmar",
+    venue: "Dallas, EE.UU.",
     time: "15:00",
-    result: null,
-    played: false,
   },
+];
+
+// ─── Mundial 2026 — Tournament Info ──────────────────
+const tournamentInfo = {
+  dates: "11 Jun — 19 Jul 2026",
+  hosts: [
+    { country: "Estados Unidos", flag: "🇺🇸", venues: 11 },
+    { country: "México", flag: "🇲🇽", venues: 3 },
+    { country: "Canadá", flag: "🇨🇦", venues: 2 },
+  ],
+  teams: 48,
+  groups: 12,
+  matches: 104,
+  venues: 16,
+};
+
+const keyDates = [
+  { date: "11 Jun 2026", label: "Inauguración", icon: "🏟️", highlight: true },
+  { date: "12–25 Jun", label: "Fase de Grupos", icon: "👥" },
+  { date: "27 Jun – 3 Jul", label: "Dieciseisavos", icon: "⚔️" },
+  { date: "5–9 Jul", label: "Octavos de Final", icon: "🔥" },
+  { date: "11–14 Jul", label: "Cuartos / Semifinal", icon: "🏆" },
+  { date: "19 Jul 2026", label: "Gran Final", icon: "🥇", highlight: true },
 ];
 
 const upcomingEvents = [
   {
-    date: "Sáb 20 Jun",
-    title: "Ecuador vs Curazao — En vivo",
-    artist: "Pantalla gigante · Tragos mundialistas · Ambiente de selección",
-    time: "21:00",
-  },
-  {
-    date: "Jue 25 Jun",
-    title: "Ecuador vs Alemania — En vivo",
-    artist: "La Tri busca la clasificación · Reservá tu mesa",
-    time: "15:00",
+    date: "Sáb 21 Jun",
+    title: "Noche del Mundial",
+    artist: "Pantalla gigante · Tragos · Ambiente de selección",
+    time: "20:00",
   },
   {
     date: "Vie 27 Jun",
@@ -169,6 +182,12 @@ const upcomingEvents = [
     title: "Acústico en el Rooftop",
     artist: "Valentina Mora — Voz y Guitarra",
     time: "20:30",
+  },
+  {
+    date: "Jue 3 Jul",
+    title: "Fiesta Latina",
+    artist: "DJ Set + Open Bar hasta medianoche",
+    time: "21:00",
   },
 ];
 
@@ -480,10 +499,10 @@ function HeroSection() {
             <div className="inline-flex items-center gap-2 bg-gradient-to-r from-primary/20 via-primary/30 to-primary/20 border border-primary/40 rounded-full px-4 sm:px-6 py-2 sm:py-2.5 cursor-pointer hover:border-primary/70 transition-all duration-300 group">
               <span className="text-lg">⚽</span>
               <span className="text-primary font-semibold text-sm sm:text-base group-hover:text-primary/90">
-                Viví el Mundial en ISMISA
+                Viví el Mundial 2026 en ISMISA
               </span>
               <span className="text-muted-foreground text-xs sm:text-sm">
-                — Próximo: Ecuador vs Curazao · Sáb 21:00
+                — Ecuador en el Grupo E 🇪🇨
               </span>
             </div>
           </a>
@@ -541,76 +560,8 @@ function HeroSection() {
   );
 }
 
-// ─── Today's match data type ──────────────────────────
-interface TodayMatch {
-  time: string;
-  home: string;
-  away: string;
-  homeFlag: string;
-  awayFlag: string;
-  score: string | null;
-  status: "played" | "live" | "upcoming";
-  group: string;
-  venue: string;
-}
-
-// ─── World Cup Section (auto-refreshing) ─────────────
+// ─── World Cup Section (Static, Elegant) ─────────────
 function WorldCupSection() {
-  const [matches, setMatches] = useState<MatchData[]>(ecuadorMatchesFallback);
-  const [lastUpdated, setLastUpdated] = useState<string | null>(null);
-  const [liveSource, setLiveSource] = useState<string>("fallback");
-
-  // Today's matches state
-  const [todayMatches, setTodayMatches] = useState<TodayMatch[]>([]);
-  const [todayDate, setTodayDate] = useState<string>("");
-  const [todaySource, setTodaySource] = useState<string>("fallback");
-
-  // Fetch Ecuador's group scores
-  const fetchScores = async () => {
-    try {
-      const res = await fetch("/api/scores");
-      if (!res.ok) throw new Error("API error");
-      const data = await res.json();
-      if (data.matches && Array.isArray(data.matches) && data.matches.length > 0) {
-        setMatches(data.matches);
-        setLastUpdated(data.updated);
-        setLiveSource(data.source);
-      }
-    } catch {
-      // Keep fallback data on error
-    }
-  };
-
-  // Fetch today's matches
-  const fetchTodayMatches = async () => {
-    try {
-      const res = await fetch("/api/today-matches");
-      if (!res.ok) throw new Error("API error");
-      const data = await res.json();
-      setTodayMatches(data.matches || []);
-      setTodayDate(data.date || "");
-      setTodaySource(data.source || "fallback");
-    } catch {
-      // Keep empty on error
-    }
-  };
-
-  // Auto-fetch on mount + every 3 minutes
-  useEffect(() => {
-    fetchScores();
-    fetchTodayMatches();
-    const interval = setInterval(() => {
-      fetchScores();
-      fetchTodayMatches();
-    }, 3 * 60 * 1000);
-    return () => clearInterval(interval);
-  }, []);
-
-  // Check if any Ecuador match is today
-  const ecuadorToday = todayMatches.some(
-    (m) => m.home === "Ecuador" || m.away === "Ecuador"
-  );
-
   return (
     <section id="mundial" className="py-20 sm:py-28 bg-background relative overflow-hidden">
       {/* Subtle background accent */}
@@ -636,11 +587,11 @@ function WorldCupSection() {
           </div>
         </FadeInSection>
 
-        {/* Ecuador's Group E Match cards */}
+        {/* Ecuador's Group E Match Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 max-w-4xl mx-auto">
-          {matches.map((match, i) => (
+          {ecuadorMatches.map((match, i) => (
             <FadeInSection key={match.title} delay={i * 0.1}>
-              <Card className={`group border-border/50 bg-card hover:border-primary/30 transition-all duration-300 h-full ${match.played ? "opacity-70" : "hover:shadow-lg hover:shadow-primary/10"}`}>
+              <Card className="group border-border/50 bg-card hover:border-primary/30 transition-all duration-300 h-full hover:shadow-lg hover:shadow-primary/10">
                 <CardContent className="p-5 sm:p-6 text-center">
                   <p className="text-primary text-sm font-semibold mb-2">
                     {match.date}
@@ -657,258 +608,158 @@ function WorldCupSection() {
                       {match.time} Ecuador
                     </span>
                   </div>
-                  {match.played && match.result && (
-                    <div className="mt-3 pt-3 border-t border-border/30">
-                      <span className="text-xs text-muted-foreground">Resultado</span>
-                      <p className="text-foreground font-bold text-lg">{match.result}</p>
-                    </div>
-                  )}
-                  {!match.played && (
-                    <div className="mt-3 pt-3 border-t border-border/30">
-                      <a
-                        href={whatsappLink(
-                          WHATSAPP_ISMISA,
-                          `Hola ISMISA! Quiero reservar mesa para ${match.title} ⚽`
-                        )}
-                        target="_blank"
-                        rel="noopener noreferrer"
+                  <div className="mt-3 pt-3 border-t border-border/30">
+                    <a
+                      href={whatsappLink(
+                        WHATSAPP_ISMISA,
+                        `Hola ISMISA! Quiero reservar mesa para ${match.title} ⚽`
+                      )}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <Button
+                        size="sm"
+                        className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold w-full glow-gold"
                       >
-                        <Button
-                          size="sm"
-                          className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold w-full glow-gold"
-                        >
-                          <MessageCircle className="w-4 h-4 mr-1.5" />
-                          Reservar mesa
-                        </Button>
-                      </a>
-                    </div>
-                  )}
+                        <MessageCircle className="w-4 h-4 mr-1.5" />
+                        Reservar mesa
+                      </Button>
+                    </a>
+                  </div>
                 </CardContent>
               </Card>
             </FadeInSection>
           ))}
         </div>
 
-        {/* ─── Partidos de Hoy ────────────────────────────── */}
-        {todayMatches.length > 0 && (
-          <FadeInSection delay={0.3}>
-            <div className="mt-14 max-w-3xl mx-auto">
-              {/* Section header */}
-              <div className="text-center mb-6">
-                <Badge
-                  variant="outline"
-                  className="mb-3 border-primary/30 text-primary"
-                >
-                  <Calendar className="w-3.5 h-3.5 mr-1.5" />
-                  Partidos de Hoy
-                </Badge>
-                <h3 className="font-[var(--font-playfair)] text-xl sm:text-2xl font-bold text-foreground">
-                  {todayDate && (
-                    <span className="capitalize">{todayDate}</span>
-                  )}
-                </h3>
-              </div>
+        {/* ─── Tournament Fixture ──────────────────────── */}
+        <FadeInSection delay={0.15}>
+          <div className="mt-14">
+            <h3 className="font-[var(--font-playfair)] text-xl sm:text-2xl font-bold text-center mb-6">
+              Fixture del <span className="text-gold-gradient">Mundial</span>
+            </h3>
 
-              {/* Match list */}
-              <Card className="border-border/50 bg-card overflow-hidden">
-                <CardContent className="p-0">
-                  <div className="divide-y divide-border/30">
-                    {todayMatches.map((match, i) => {
-                      const isEcuador = match.home === "Ecuador" || match.away === "Ecuador";
-                      return (
-                        <div
-                          key={`${match.home}-${match.away}-${i}`}
-                          className={`px-4 sm:px-6 py-3.5 transition-colors ${
-                            isEcuador
-                              ? "bg-primary/10 hover:bg-primary/15"
-                              : "hover:bg-secondary/30"
-                          }`}
-                        >
-                          {/* Mobile layout (stacked) */}
-                          <div className="flex sm:hidden items-center gap-3">
-                            {/* Time / Live badge */}
-                            <div className="shrink-0 w-12 text-center">
-                              {match.status === "live" ? (
-                                <span className="inline-flex items-center gap-1 text-xs font-bold text-red-400">
-                                  <span className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse" />
-                                  VIVO
-                                </span>
-                              ) : (
-                                <span className="text-xs text-primary font-semibold">
-                                  {match.time}
-                                </span>
-                              )}
-                            </div>
-
-                            {/* Teams + Score (stacked) */}
-                            <div className="flex-1 min-w-0">
-                              <div className="flex items-center justify-between gap-2">
-                                <div className="flex items-center gap-1.5 min-w-0">
-                                  <span className="text-base">{match.homeFlag}</span>
-                                  <span className={`text-sm font-semibold truncate ${isEcuador && match.home === "Ecuador" ? "text-primary" : "text-foreground"}`}>
-                                    {match.home}
-                                  </span>
-                                </div>
-                                {match.score && (
-                                  <span className={`font-bold text-sm shrink-0 ${match.status === "live" ? "text-red-400" : "text-foreground"}`}>
-                                    {match.score.split("-")[0]}
-                                  </span>
-                                )}
-                              </div>
-                              <div className="flex items-center justify-between gap-2 mt-0.5">
-                                <div className="flex items-center gap-1.5 min-w-0">
-                                  <span className="text-base">{match.awayFlag}</span>
-                                  <span className={`text-sm font-semibold truncate ${isEcuador && match.away === "Ecuador" ? "text-primary" : "text-foreground"}`}>
-                                    {match.away}
-                                  </span>
-                                </div>
-                                {match.score ? (
-                                  <span className={`font-bold text-sm shrink-0 ${match.status === "live" ? "text-red-400" : "text-foreground"}`}>
-                                    {match.score.split("-")[1]}
-                                  </span>
-                                ) : (
-                                  <span className="text-[10px] text-muted-foreground shrink-0">
-                                    {match.time}
-                                  </span>
-                                )}
-                              </div>
-                            </div>
-
-                            {/* Group badge */}
-                            <span className="text-[10px] text-muted-foreground shrink-0">
-                              {match.group}
-                            </span>
-                          </div>
-
-                          {/* Desktop layout (horizontal) */}
-                          <div className="hidden sm:flex items-center">
-                            {/* Time */}
-                            <div className="w-16 shrink-0 text-center">
-                              {match.status === "live" ? (
-                                <span className="inline-flex items-center gap-1 text-xs font-bold text-red-400">
-                                  <span className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse" />
-                                  VIVO
-                                </span>
-                              ) : (
-                                <span className="text-sm text-primary font-semibold">
-                                  {match.time}
-                                </span>
-                              )}
-                            </div>
-
-                            {/* Teams + Score */}
-                            <div className="flex-1 min-w-0 flex items-center justify-center gap-3">
-                              {/* Home team */}
-                              <div className="flex items-center gap-1.5 justify-end flex-1 min-w-0">
-                                <span className={`text-sm font-semibold truncate ${isEcuador && match.home === "Ecuador" ? "text-primary" : "text-foreground"}`}>
-                                  {match.home}
-                                </span>
-                                <span className="text-lg">{match.homeFlag}</span>
-                              </div>
-
-                              {/* Score or vs */}
-                              <div className="w-16 shrink-0 text-center">
-                                {match.score ? (
-                                  <span className={`font-bold text-base ${match.status === "live" ? "text-red-400" : "text-foreground"}`}>
-                                    {match.score}
-                                  </span>
-                                ) : (
-                                  <span className="text-xs text-muted-foreground font-medium">vs</span>
-                                )}
-                              </div>
-
-                              {/* Away team */}
-                              <div className="flex items-center gap-1.5 flex-1 min-w-0">
-                                <span className="text-lg">{match.awayFlag}</span>
-                                <span className={`text-sm font-semibold truncate ${isEcuador && match.away === "Ecuador" ? "text-primary" : "text-foreground"}`}>
-                                  {match.away}
-                                </span>
-                              </div>
-                            </div>
-
-                            {/* Group */}
-                            <div className="w-20 shrink-0 text-right">
-                              <span className="text-xs text-muted-foreground">
-                                {match.group}
-                              </span>
-                            </div>
-                          </div>
-                        </div>
-                      );
-                    })}
-                  </div>
-                </CardContent>
-              </Card>
-
-              {/* Ecuador today CTA */}
-              {ecuadorToday && (
-                <div className="text-center mt-5">
-                  <a
-                    href={whatsappLink(
-                      WHATSAPP_ISMISA,
-                      "Hola ISMISA! Quiero reservar mesa para el partido de Ecuador hoy ⚽🇪🇨"
-                    )}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    <Button
-                      className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold glow-gold transition-all duration-300 hover:scale-105"
-                    >
-                      <MessageCircle className="w-4 h-4 mr-2" />
-                      🇪🇨 Reservar para Ecuador hoy
-                    </Button>
-                  </a>
+            <Card className="border-primary/20 bg-card max-w-4xl mx-auto overflow-hidden">
+              {/* Header */}
+              <div className="bg-gradient-to-r from-primary/10 via-primary/20 to-primary/10 px-6 py-5 border-b border-primary/20">
+                <div className="flex items-center justify-center gap-3">
+                  <Trophy className="w-6 h-6 text-primary" />
+                  <h4 className="font-[var(--font-playfair)] text-xl sm:text-2xl font-bold text-center">
+                    Mundial 2026 — USA · México · Canadá
+                  </h4>
                 </div>
-              )}
-            </div>
-          </FadeInSection>
-        )}
+              </div>
+              <CardContent className="p-6 sm:p-8">
+                {/* Stats grid */}
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 text-center mb-6">
+                  <div className="space-y-1">
+                    <div className="flex items-center justify-center mb-2">
+                      <div className="w-10 h-10 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center">
+                        <Users className="w-5 h-5 text-primary" />
+                      </div>
+                    </div>
+                    <p className="text-3xl font-bold text-primary">{tournamentInfo.teams}</p>
+                    <p className="text-xs text-muted-foreground">Selecciones</p>
+                  </div>
+                  <div className="space-y-1">
+                    <div className="flex items-center justify-center mb-2">
+                      <div className="w-10 h-10 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center">
+                        <Globe2 className="w-5 h-5 text-primary" />
+                      </div>
+                    </div>
+                    <p className="text-3xl font-bold text-primary">{tournamentInfo.groups}</p>
+                    <p className="text-xs text-muted-foreground">Grupos</p>
+                  </div>
+                  <div className="space-y-1">
+                    <div className="flex items-center justify-center mb-2">
+                      <div className="w-10 h-10 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center">
+                        <Calendar className="w-5 h-5 text-primary" />
+                      </div>
+                    </div>
+                    <p className="text-3xl font-bold text-primary">{tournamentInfo.matches}</p>
+                    <p className="text-xs text-muted-foreground">Partidos</p>
+                  </div>
+                  <div className="space-y-1">
+                    <div className="flex items-center justify-center mb-2">
+                      <div className="w-10 h-10 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center">
+                        <Map className="w-5 h-5 text-primary" />
+                      </div>
+                    </div>
+                    <p className="text-3xl font-bold text-primary">{tournamentInfo.venues}</p>
+                    <p className="text-xs text-muted-foreground">Sedes</p>
+                  </div>
+                </div>
 
-        {/* No matches today message */}
-        {todayMatches.length === 0 && todaySource !== "fallback" && (
-          <FadeInSection delay={0.3}>
-            <div className="mt-12 text-center max-w-md mx-auto">
-              <Card className="border-border/50 bg-card">
-                <CardContent className="p-6">
-                  <p className="text-3xl mb-2">🏐</p>
-                  <p className="text-muted-foreground text-sm">
-                    Hoy no hay partidos del Mundial
-                  </p>
-                  <p className="text-muted-foreground text-xs mt-1">
-                    Volvé mañana para más acción ⚽
-                  </p>
-                </CardContent>
-              </Card>
-            </div>
-          </FadeInSection>
-        )}
+                {/* Host countries */}
+                <div className="pt-5 border-t border-border/30">
+                  <div className="flex flex-col sm:flex-row items-center justify-center gap-6 sm:gap-10">
+                    {tournamentInfo.hosts.map((host) => (
+                      <div key={host.country} className="flex items-center gap-3">
+                        <span className="text-3xl sm:text-4xl">{host.flag}</span>
+                        <div>
+                          <p className="text-sm font-semibold text-foreground">{host.country}</p>
+                          <p className="text-xs text-muted-foreground">{host.venues} sedes</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
 
-        {/* CTA + live indicator */}
+                {/* Tournament dates */}
+                <div className="mt-5 pt-4 border-t border-border/30 text-center">
+                  <p className="text-sm text-muted-foreground">
+                    📅 {tournamentInfo.dates}
+                  </p>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </FadeInSection>
+
+        {/* Key Dates Timeline */}
+        <FadeInSection delay={0.2}>
+          <div className="max-w-3xl mx-auto mt-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              {keyDates.map((kd) => (
+                <Card
+                  key={kd.label}
+                  className={`border-border/50 bg-card transition-all duration-300 ${
+                    kd.highlight
+                      ? "border-primary/30 hover:border-primary/50 hover:shadow-lg hover:shadow-primary/10"
+                      : "hover:border-border"
+                  }`}
+                >
+                  <CardContent className="p-4 flex items-center gap-4">
+                    <div className={`w-10 h-10 rounded-lg flex items-center justify-center text-lg shrink-0 ${
+                      kd.highlight
+                        ? "bg-primary/20 border border-primary/30"
+                        : "bg-secondary/50"
+                    }`}>
+                      {kd.icon}
+                    </div>
+                    <div className="min-w-0">
+                      <p className={`text-sm font-semibold ${kd.highlight ? "text-primary" : "text-foreground"}`}>
+                        {kd.label}
+                      </p>
+                      <p className="text-xs text-muted-foreground">{kd.date}</p>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </div>
+        </FadeInSection>
+
+        {/* Bottom CTA */}
         <FadeInSection delay={0.4}>
           <div className="text-center mt-10">
-            <p className="text-muted-foreground text-sm mb-4">
-              🇪🇨 Cada partido de Ecuador · Pantalla gigante · Tragos mundialistas
+            <p className="text-muted-foreground text-sm mb-5">
+              🇪🇨 Cada partido de Ecuador · 📺 Pantalla gigante · 🍹 Tragos de selección
             </p>
-            {/* Live status indicator */}
-            <div className="flex items-center justify-center gap-2 mb-4">
-              <span className={`inline-block w-2 h-2 rounded-full ${liveSource === "live" || todaySource === "live" ? "bg-green-500 animate-pulse" : liveSource === "cache" || todaySource === "cache" ? "bg-yellow-500" : "bg-muted-foreground/50"}`} />
-              <span className="text-xs text-muted-foreground">
-                {(liveSource === "live" || todaySource === "live")
-                  ? "Resultados en vivo"
-                  : (liveSource === "cache" || todaySource === "cache")
-                  ? "Última actualización cacheada"
-                  : "Datos por defecto"}
-                {lastUpdated && (
-                  <span className="ml-1">
-                    · {new Date(lastUpdated).toLocaleTimeString("es-EC", { hour: "2-digit", minute: "2-digit" })}
-                  </span>
-                )}
-              </span>
-            </div>
             <a
               href={whatsappLink(
                 WHATSAPP_ISMISA,
-                "Hola ISMISA! Quiero reservar mesa para el próximo partido de Ecuador ⚽🇪🇨"
+                "Hola ISMISA! Quiero reservar mesa para el Mundial ⚽🇪🇨"
               )}
               target="_blank"
               rel="noopener noreferrer"
@@ -1099,7 +950,7 @@ function MenuSection() {
               Nuestros <span className="text-gold-gradient">Tragos</span>
             </h2>
             <p className="mt-4 text-muted-foreground text-lg max-w-xl mx-auto">
-              Cócteles artesanales con alma ecuatoriana
+              Selección premium de bebidas para cada gusto
             </p>
           </div>
         </FadeInSection>
